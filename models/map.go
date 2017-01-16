@@ -7,4 +7,5 @@ type MyMap struct {
 	Boundaries  string    `json:"boundaries"`
 	GroupOwner  string    `json:"groupOwner"db:"group_owner"`
 	Addresses   []address `json:"addresses"`
+	CreatedAt   string    `json:"created_at"db:"created_at"`
 }

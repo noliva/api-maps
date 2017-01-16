@@ -13,14 +13,22 @@ func init() {
 	db = database.Connector()
 }
 
-func Insert(m models.MyMap) {
-	query := `INSERT INTO area_map (id, name, description, boundaries, group_owner) VALUES (?, ?, ?, ?, ?)`
-	db.MustExec(query, m.ID, m.Name, m.Description, m.Boundaries, m.GroupOwner)
+func Create(m models.MyMap) {
+	query := `INSERT INTO map (name, description, boundaries, group_owner, created_at) VALUES (?, ?, ?, ?, ?)`
+	db.MustExec(query, m.Name, m.Description, m.Boundaries, m.GroupOwner, m.CreatedAt)
+}
+
+func Delete(m models.MyMap) {
+	err := db.MustExec("DELETE FROM map WHERE id=?", m.ID)
+
+	if err != nil {
+		log.Fatalln("Error fetching: ", err)
+	}
 }
 
 func FindMapById(id string) models.MyMap {
 	var newAreaMap models.MyMap
-	err := db.Select(&newAreaMap, "SELECT * FROM area_map WHERE id=?", id)
+	err := db.Get(&newAreaMap, "SELECT * FROM map WHERE id=?", id)
 
 	if err != nil {
 		log.Fatalln("Error fetching: ", err)
@@ -31,7 +39,7 @@ func FindMapById(id string) models.MyMap {
 
 func FindAllMaps() []models.MyMap {
 	areaMaps := []models.MyMap{}
-	err := db.Select(&areaMaps, "SELECT * FROM area_map")
+	err := db.Select(&areaMaps, "SELECT * FROM map")
 
 	if err != nil {
 		log.Fatalln("Error fetching: ", err)
